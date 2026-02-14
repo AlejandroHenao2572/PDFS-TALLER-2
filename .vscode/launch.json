@@ -10,6 +10,16 @@
       "args": [],
       "jvmOptions": [],
       "env": {}
+    },
+    {
+      "type": "scala",
+      "request": "launch",
+      "name": "ejecutar",
+      "mainClass": "ejecutar",
+      "buildTarget": "file:/C:/Users/aleja/OneDrive/Desktop/7%20SEMESTRE/PFSD/PrimerTercio/PDFS-TALLER-2/.scala-build/?id=PDFS-TALLER-2_7943a5e3e4",
+      "args": [],
+      "jvmOptions": [],
+      "env": {}
     }
   ]
 }

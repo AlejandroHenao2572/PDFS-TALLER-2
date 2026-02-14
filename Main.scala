@@ -163,55 +163,79 @@ def enriqueser(transacciones: List[Transaccion]) = {
 //3.	Calcular el valor de movimiento de cada Usuario
 //4.	Calcular cual es el Usuario que más dinero ha movido
 //5.	Marcar alertaRiesgo = true si el cliente tiene más de 3 transacciones de "ALTO_RIESGO".
+def agregarTransacciones(transacciones: List[Transaccion]) = {
+  //Punto 1: Agrupar transacciones por producto y sumar el monto
+  //Usar gruopBy para agrupar las transacciones de cada producto, retorna Map(String->List[Transacciones], ...)
+  val porProducto = transacciones.groupBy(_.producto)
+  //Calcular el valor de total de los movimientos de cada transaccion
+  val movimientoPorProducto = porProducto.map {
+    //Destructurar la tupla
+    case (idProducto, transacciones) =>
+      val total = transacciones.map(_.monto).sum
+      (idProducto, total) //Devolver una nueva tupla con el total de cada producto
+  }
 
-//Punto 1: Agrupar transacciones por producto y sumar el monto
-//Usar gruopBy para agrupar las transacciones de cada producto, retorna Map(String->List[Transacciones], ...)
-val porProducto = transacciones.groupBy(_.producto)
-//Calcular el valor de total de los movimientos de cada transaccion
-val movimientoPorProducto = porProducto.map {
-  //Destructurar la tupla
-  case (idProducto, transacciones) =>
-    val total = transacciones.map(_.monto).sum
-    (idProducto, total) //Devolver una nueva tupla con el total de cada producto
+  //Punto 2: Filtrar los creditos, calcular el interez de cada uno y sumarlos
+  val utilidad = transacciones.filter(_.tipo == "CREDITO")
+                .map(t =>
+                    val producto = BancoData.productos.find(_.idProducto == t.producto)
+                    val tasa = producto.map(_.tasaInteres).getOrElse(0.0)
+                    t.monto * tasa //Calcular interes
+                ).sum //Sumar todos los intereses
+
+  //Punto 3: Misma estrategia del punto 1, pero agrupando usuario
+  val movimientoPorUsuario = transacciones
+    .groupBy(_.usuario) //Agrupar transacciones por usuario
+    .map{
+      case (idusuario, transacciones) =>
+          val total = transacciones.map(_.monto).sum
+          (idusuario, total)
+    }
+
+  //Punto 4: Encontrar el mas maximo del punto anterior
+  // maxBy selecciona el elemento con el valor maximo según el criterio (_._2 = segundo elemento de la tupla)
+  // ej: ("U001", 15000.0)
+  val usuarioTop = movimientoPorUsuario.maxBy(_._2)
+
+  //Punto 5: Agrupar por usuarios, contar transacciones de alto riesgo y generar reporte
+  val reportes = transacciones
+    .groupBy(_.usuario)
+    .map{case (idusuario, transacciones) =>
+      val cont = transacciones.count(_.etiqueta == "ALTO_RIESGO") //Contar transacciones de alto riesgo
+
+      //Buscar el nombre del cliente
+      val nombre = BancoData.usuarios
+                  .find(_.id == idusuario)
+                  .map(_.nombre).getOrElse("Usuario Desconocido")
+
+      //Consultar saldoTotal
+      val saldo = transacciones.map(_.monto).sum
+
+      //Crear el reporte
+      ReporteCliente(nombreCliente = nombre, saldoTotal = saldo, alertaRiesgo = cont > 3)
+    }
+  
+  (movimientoPorProducto, utilidad, movimientoPorUsuario, usuarioTop, reportes) //Tupla de 5 elementos con los datos solicitados
 }
 
-//Punto 2: Filtrar los creditos, calcular el interez de cada uno y sumarlos
-val utilidad = transacciones.filter(_.tipo == "CREDITO")
-              .map(t =>
-                  val producto = BancoData.productos.find(_.idProducto == t.producto)
-                  val tasa = producto.map(_.tasaInteres).getOrElse(0.0)
-                  t.monto * tasa //Calcular interes
-              ).sum //Sumar todos los intereses
+//MAIN - Aplicar todas las fases al dataset
+@main def ejecutar(): Unit = {
 
-//Punto 3: Misma estrategia del punto 1, pero agrupando usuario
-val movimientoPorUsuario = transacciones
-  .groupBy(_.usuario) //Agrupar transacciones por usuario
-  .map{
-    case (idusuario, transacciones) =>
-        val total = transacciones.map(_.monto).sum
-        (idusuario, total)
-  }
-
-//Punto 4: Encontrar el mas maximo del punto anterior
-// maxBy selecciona el elemento con el valor maximo según el criterio (_._2 = segundo elemento de la tupla)
-// ej: ("U001", 15000.0)
-val usuarioTop = movimientoPorUsuario.maxBy(_._2)
-
-//Punto 5: Agrupar por usuarios, contar transacciones de alto riesgo y generar reporte
-val resportes = transacciones
-  .groupBy(_.usuario)
-  .map{case (idusuario, transacciones) =>
-    val cont = transacciones.count(_.etiqueta == "ALTO_RIESGO") //Contar transacciones de alto riesgo
-
-    //Buscar el nombre del cliente
-    val nombre = BancoData.usuarios
-                .find(_.id == idusuario)
-                .map(_.nombre).getOrElse("Usuario Desconocido")
-
-    //Consultar saldoTotal
-    val saldo = transacciones.map(_.monto).sum
-
-    //Crear el reporte
-    ReporteCliente(nombreCliente = nombre, saldoTotal = saldo, alertaRiesgo = cont > 3)
-  }
+  // FASE 1: Limpieza
+  println("\nFASE 1: Limpieza de Transacciones")
+  val transaccionesLimpias = limpiarTransacciones(BancoData.transacciones, BancoData.usuarios)
+  println(s"Transacciones originales: ${BancoData.transacciones.size}")
+  println(s"Transacciones limpias: ${transaccionesLimpias.size}")
+  println(s"Transacciones eliminadas: ${BancoData.transacciones.size - transaccionesLimpias.size}")
+  
+  // FASE 2: Enriquecimiento
+  println("\nFASE 2: Enriquecimiento")
+  val transaccionesEnriquecidas = enriqueser(transaccionesLimpias)
+  println(s"Transacciones enriquecidas: ${transaccionesEnriquecidas.size}")
+  
+  // FASE 3: Agregacion
+  println("\nFASE 3: Agregacion")
+  val (movimientoProducto, utilidadTotal, movimientoUsuario, topUsuario, reportes) = 
+    agregarTransacciones(transaccionesEnriquecidas)
+}
 
