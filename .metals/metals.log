@@ -1604,3 +1604,15 @@ Exception in thread "pool-8-thread-11" java.lang.InterruptedException
 2026.02.13 22:22:14 INFO  time: compiled PDFS-TALLER-2_7943a5e3e4 in 2.25s
 2026.02.13 22:22:40 INFO  compiling pdfs-taller-2_7943a5e3e4 (1 scala source)
 2026.02.13 22:22:40 INFO  time: compiled PDFS-TALLER-2_7943a5e3e4 in 0.95s
+2026.02.13 22:24:35 INFO  compiling pdfs-taller-2_7943a5e3e4 (1 scala source)
+2026.02.13 22:24:41 INFO  time: compiled PDFS-TALLER-2_7943a5e3e4 in 6.05s
+feb 13, 2026 10:25:58 P. M. org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+feb 13, 2026 10:27:09 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17477
+feb 13, 2026 10:28:02 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17736
+2026.02.13 22:31:10 INFO  compiling pdfs-taller-2_7943a5e3e4 (1 scala source)
+2026.02.13 22:31:12 INFO  time: compiled PDFS-TALLER-2_7943a5e3e4 in 1.98s
+feb 13, 2026 10:31:51 P. M. org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 18058
