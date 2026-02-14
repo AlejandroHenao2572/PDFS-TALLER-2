@@ -1,0 +1,217 @@
+import java.time.LocalDate
+import BancoData.transacciones
+
+
+//MODELO DE DATOS
+// 1. Catálogo de Productos
+case class Producto(idProducto: String, nombre: String, tasaInteres: Double)
+
+// 2. Registro de Transacciones
+case class Transaccion(id: String, producto: String, monto: Double, fecha: LocalDate, tipo: String, etiqueta: String, usuario:String)
+
+// 3. Entidad de Usuario
+case class Usuario(id: String, nombre: String,  ciudad: String, productos: List[String])
+
+// 4. Reporte Consolidado
+case class ReporteCliente(nombreCliente: String, saldoTotal: Double, alertaRiesgo: Boolean)
+
+//DATASET
+object BancoData {
+
+    val productos = List(
+        Producto("P001", "Tarjeta Crédito Infinite", 0.36),
+        Producto("P002", "Tarjeta Crédito Clásica", 0.45),
+        Producto("P003", "Tarjeta Crédito Oro", 0.38),
+        Producto("P004", "Tarjeta Crédito Platinum", 0.29),
+        Producto("P005", "Tarjeta Crédito Black", 0.44),
+        Producto("P006", "Tarjeta Crédito LifeMiles", 0.41),
+        Producto("P007", "Tarjeta Crédito Signature", 0.44)
+    )
+
+    val usuarios = List(
+        Usuario("U001", "Carlos Pérez", "Bogotá", List("P001", "P002", "P007")),
+        Usuario("U002", "Ana López", "Medellín", List("P001", "P004", "P003", "P006")),
+        Usuario("U003", "Juan Lozano", "Cali", List("P001", "P004", "P003", "P006")),
+        Usuario("U004", "Enrique Prieto", "Bogotá", List("P002", "P004", "P003", "P005")),
+        Usuario("U005", "Manuel Medina", "Cartagena", List("P007", "P005")),
+        Usuario("U006", "Maria Gomez", "Pereira", List("P006", "P003")),
+        Usuario("U007", "Claudia Gonzalez", "Bogotá", List("P001", "P004", "P003", "P006", "P002")),
+        Usuario("U008", "Nicolas Rodriguez", "Medellín", List("P001", "P004", "P003", "P006")),
+        Usuario("U009", "Estefania Lemus", "Cali", List()),
+        Usuario("U010", "Sandra Vasquez", "Bogotá", List( "P006"))
+   )
+
+    val transacciones = List(
+    Transaccion("T1", "P001", 2500.0, LocalDate.now(), "CREDITO", "Nomina", "U009"),
+    Transaccion("T2", "P001", 120.50, LocalDate.now(), "DEBITO", "Cajero", "U001"),
+    Transaccion("T3", "P002", 450.0, LocalDate.now(), "DEBITO", "Supermercado", "U003"),
+    Transaccion("T4", "P001", 50.0, LocalDate.now(), "DEBITO", "Transporte", "U005"),
+    Transaccion("T5", "P003", 1500.0,LocalDate.now(), "CREDITO", "Transferencia", "U006"),
+    Transaccion("T6", "P001", 3000.0, LocalDate.now(), "CREDITO", "Nomina", "U001"),
+    Transaccion("T7", "P001", 800.0,LocalDate.now(), "DEBITO", "Alquiler", "U007"),
+    Transaccion("T8", "P003", -100.0,LocalDate.now(), "DEBITO", "ERROR_SISTEMA", "U002"),
+    Transaccion("T9", "P005", 50.0, LocalDate.now(), "DEBITO", "Cajero", "U008"),
+    Transaccion("T10", "P001", 20.0, LocalDate.now(), "DEBITO", "Cajero", "U002"),
+    Transaccion("T11", "P005", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U001"),
+    Transaccion("T12", "P003", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U004"),
+    Transaccion("T13", "P006", 2000.0, LocalDate.now(),"CREDITO", "Abono_Extra", "U009"),
+    Transaccion("T14", "P003", 0.0, LocalDate.now(),"CREDITO", "", "U008"),
+    Transaccion("T15", "P006", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U001"),
+    Transaccion("T16", "P002", 6000.0, LocalDate.now(),"DEBITO", "ALTO_RIESGO_LUJO", "U008"),
+    Transaccion("T17", "P007", 150.0, LocalDate.now(),"DEBITO", "Restaurante", "U008"),
+    Transaccion("T18", "P003", 1200.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U007"),
+    Transaccion("T19", "P007", 45.0, LocalDate.now(),"DEBITO", "Suscripcion", "U005"),
+    Transaccion("T20", "P007", 200.0, LocalDate.now(),"CREDITO", "Reembolso", "U004"),
+    Transaccion("T21", "P001", 1100.0, LocalDate.now(),"CREDITO", "Nomina", "U008"),
+    Transaccion("T22", "P001", 300.0, LocalDate.now(),"DEBITO", "Cajero", "U003"),
+    Transaccion("T23", "P002", 15.0, LocalDate.now(),"DEBITO", "Cafe", "U005"),
+    Transaccion("T24", "P001", 200.0, LocalDate.now(),"DEBITO", "Servicios", "U003"),
+    Transaccion("T25", "P001", 400.0, LocalDate.now(),"CREDITO", "Transferencia", "U003"),
+    Transaccion("T26", "P005", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U004"),
+    Transaccion("T27", "P006", 850.0, LocalDate.now(),"DEBITO", "Viajes", "U006"),
+    Transaccion("T28", "P004", 12.0, LocalDate.now(),"DEBITO", "Transporte", "U002"),
+    Transaccion("T29", "P005", 1100.0, LocalDate.now(),"CREDITO", "Nomina", "U008"),
+    Transaccion("T30", "P006", 90.0, LocalDate.now(),"DEBITO", "Farmacia", "U008"),
+    Transaccion("T31", "P004", 500.0, LocalDate.now(),"CREDITO", "Venta_Garage", "U002"),
+    Transaccion("T32", "P013", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U003"),
+    Transaccion("T33", "P001", 200.0, LocalDate.now(),"DEBITO", "Cajero", "U004"),
+    Transaccion("T34", "P002", 1200.0, LocalDate.now(),"DEBITO", "Electronica", "U009"),
+    Transaccion("T35", "P001", 100.0, LocalDate.now(),"DEBITO", "Restaurante", "U001"),
+    Transaccion("T36", "P003", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U007"),
+    Transaccion("T37", "P002", 30.0, LocalDate.now(),"DEBITO", "Cine", "U006"),
+    Transaccion("T38", "P007", 1500.0, LocalDate.now(),"CREDITO", "Nomina", "U011"),
+    Transaccion("T39", "P007", 250.0, LocalDate.now(),"DEBITO", "Gimnasio", "U008"),
+    Transaccion("T40", "P006", 2000.0, LocalDate.now(),"CREDITO", "Abono_Capital", "U007"),
+    Transaccion("T41", "P001", 45.0, LocalDate.now(),"DEBITO", "Transporte", "U004"),
+    Transaccion("T42", "P004", 3000.0, LocalDate.now(),"DEBITO", "ALTO_RIESGO_JOYAS", "U008"),
+    Transaccion("T43", "P001", 100.0, LocalDate.now(),"DEBITO", "Cajero", "U003"),
+    Transaccion("T44", "P004", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U005"),
+    Transaccion("T45", "P002", 150.0, LocalDate.now(),"DEBITO", "Supermercado", "U002"),
+    Transaccion("T46", "P001", 1100.0, LocalDate.now(),"CREDITO", "Nomina", "U004"),
+    Transaccion("T47", "P005", 10.0, LocalDate.now(),"DEBITO", "App_Store", "U002"),
+    Transaccion("T48", "P003", 500.0, LocalDate.now(),"DEBITO", "Cuota_Mes", "U009"),
+    Transaccion("T49", "P005", 75.0, LocalDate.now(),"DEBITO", "Restaurante", "U003"),
+    Transaccion("T50", "P999", 1000.0, LocalDate.now(),"CREDITO", "ERROR_PRODUCTO", "U012"),
+    Transaccion("T51", "P005", 75.0, LocalDate.now(),"DEBITO", "Restaurante", "U003"),
+    Transaccion("T52", "P005", 75.0, LocalDate.now(),"DEBITO", "Restaurante", "U003")
+    )
+}
+
+
+//Fase 1: Saneamiento y limpieza de información
+//Objetivo: Eliminar datos corruptos.
+//1.	Crear una función que reciba la lista de 50 transacciones.
+//2.	Filtrar solo aquellas con montos positivos.
+//3.	Eliminar las transacciones duplicadas (omitiendo el identificador).
+//4.	Eliminar las transacciones que no tengan usuarios válidos
+def limpiarTransacciones(transacciones:  List[Transaccion], usuarios: List[Usuario] ): List[Transaccion] = {
+  //filtrar montos positivos
+  val filtroMontosPositivos = transacciones.filter(_.monto > 0) 
+  //distinctBy para eliminar duplicados omitiendo el identificador, manteniendo el primer elemento encontrado
+  val filtroTransaccionesUnicas = filtroMontosPositivos.distinctBy(t => (t.producto, t.monto, t.fecha, t.tipo, t.etiqueta, t.usuario))
+  //obtener lista de usuarios validos
+  val filtroUsuariosValidos = filtroTransaccionesUnicas.filter(t => usuarios.exists(u => u.id == t.usuario))
+  //return con transaccions limpias
+  filtroUsuariosValidos
+}
+
+//Fase 2: Enriquecimiento
+//Objetivo: Normalizar categorías.
+//1.	Asegurar que todas las etiquetas estén en Mayúsculas.
+//2.	Si una transacción es de tipo "DEBITO" y supera los $3.000, cambiar su etiqueta a "ALTO_RIESGO".
+//3.	Si una transacción es de tipo “CREDITO”, calcule el interés de cada compra
+def enriqueser(transacciones: List[Transaccion]) = {
+  transacciones.map{ t =>
+    //Pasar las etiquetas a mayuscula
+    val etiquetaMayus = t.etiqueta.toUpperCase()
+    //Aplicar patter maching
+    
+    t match {
+      //Cuando es DEBITO, se crea una copia al ser inmutable y se asigna la etiqueta
+      case Transaccion(_, _, monto, _, "DEBITO", _, _) if monto > 3000 => t.copy(etiqueta = "ALTO_RIESGO")
+
+      //Cuando es CREDITO
+      case Transaccion(_, productoId, monto, _, "CREDITO", _, _)  =>
+
+        //Buscar el producto comprado en la transaccion
+        //.find() retorna un Option[Producto]
+        val producto = BancoData.productos.find(_.idProducto == productoId)
+
+        //Obtener la tasa de interes
+        //.map() para transformar el option
+        // Si es Some(Producto("P001", "...", 0.36)) ->  Some(0.36)
+        // Si es None → None
+        // .getOrElse extrae el valor o usa uno por defecto
+        // Si es Some(0.36) -> 0.36
+        // Si es None -> 0.0
+        val tasa = producto.map(_.tasaInteres).getOrElse(0.0)
+        val interes = monto * tasa
+        //Sumar el interes de la compra
+        t.copy(etiqueta = etiquetaMayus, monto = monto + interes)
+
+      case _ =>
+        //Retornar transaccion con etiqueta en mayusculas
+        t.copy(etiqueta = etiquetaMayus)
+    }
+  }
+}
+
+//Fase 3: Agregación Compleja 
+//Objetivo: Cálculo de saldos.
+//1.	Calcular el movimiento total de cada uno de los productos
+//2.	Calcular el total de utilidad que tendrá el banco con los créditos datos
+//3.	Calcular el valor de movimiento de cada Usuario
+//4.	Calcular cual es el Usuario que más dinero ha movido
+//5.	Marcar alertaRiesgo = true si el cliente tiene más de 3 transacciones de "ALTO_RIESGO".
+
+//Punto 1: Agrupar transacciones por producto y sumar el monto
+//Usar gruopBy para agrupar las transacciones de cada producto, retorna Map(String->List[Transacciones], ...)
+val porProducto = transacciones.groupBy(_.producto)
+//Calcular el valor de total de los movimientos de cada transaccion
+val movimientoPorProducto = porProducto.map {
+  //Destructurar la tupla
+  case (idProducto, transacciones) =>
+    val total = transacciones.map(_.monto).sum
+    (idProducto, total) //Devolver una nueva tupla con el total de cada producto
+}
+
+//Punto 2: Filtrar los creditos, calcular el interez de cada uno y sumarlos
+val utilidad = transacciones.filter(_.tipo == "CREDITO")
+              .map(t =>
+                  val producto = BancoData.productos.find(_.idProducto == t.producto)
+                  val tasa = producto.map(_.tasaInteres).getOrElse(0.0)
+                  t.monto * tasa //Calcular interes
+              ).sum //Sumar todos los intereses
+
+//Punto 3: Misma estrategia del punto 1, pero agrupando usuario
+val movimientoPorUsuario = transacciones
+  .groupBy(_.usuario) //Agrupar transacciones por usuario
+  .map{
+    case (idusuario, transacciones) =>
+        val total = transacciones.map(_.monto).sum
+        (idusuario, total)
+  }
+
+//Punto 4: Encontrar el mas maximo del punto anterior
+// maxBy selecciona el elemento con el valor maximo según el criterio (_._2 = segundo elemento de la tupla)
+// ej: ("U001", 15000.0)
+val usuarioTop = movimientoPorUsuario.maxBy(_._2)
+
+//Punto 5: Agrupar por usuarios, contar transacciones de alto riesgo y generar reporte
+val resportes = transacciones
+  .groupBy(_.usuario)
+  .map{case (idusuario, transacciones) =>
+    val cont = transacciones.count(_.etiqueta == "ALTO_RIESGO") //Contar transacciones de alto riesgo
+
+    //Buscar el nombre del cliente
+    val nombre = BancoData.usuarios
+                .find(_.id == idusuario)
+                .map(_.nombre).getOrElse("Usuario Desconocido")
+
+    //Consultar saldoTotal
+    val saldo = transacciones.map(_.monto).sum
+
+    //Crear el reporte
+    ReporteCliente(nombreCliente = nombre, saldoTotal = saldo, alertaRiesgo = cont > 3)
+  }
+
